@@ -2,6 +2,15 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: "production",  
+  cache: {
+    type: 'filesystem',
+    allowCollectingMemory: true,
+    buildDependencies: {
+      // This makes all dependencies of this file - build dependencies
+      config: [__filename],
+      // By default webpack and loaders are build dependencies
+    },
+  },
   entry: {
     main: ["./src/index.js", "./src/styles/index.scss"],
   },
@@ -13,6 +22,14 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules)/,
+        use: {
+          // `.swcrc` can be used to configure swc
+          loader: "swc-loader"
+        }
+      },
       {
         test: /\.s[ac]ss$/i,
         use: [
